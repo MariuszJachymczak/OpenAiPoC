@@ -3,8 +3,10 @@ const dotenv = require('dotenv');
 const express = require('express');
 const bodyParser = require('body-parser');
 
+const cors = require('cors');
+
 const app = express();
-app.use(bodyParser.json());
+app.use(bodyParser.json(), cors());
 
 app.use(function (req, res, next) {
   res.header('Access-Control-Allow-Origin', '*'); //Allow for all origins
@@ -28,7 +30,7 @@ app.post('/gpt', async (req, res) => {
 app.post('/dalle', async (req, res) => {
   let prompt = req.body.prompt;
   let response = await promptImage(prompt);
-  res.send(response);
+  res.send(response); // This line was missing
 });
 
 dotenv.config();
@@ -56,6 +58,7 @@ let promptAi = async (prompt) => {
     frequency_penalty: 0.5,
     top_p: 1,
   });
+
   return response.choices[0];
 };
 
@@ -65,12 +68,11 @@ async function promptImage(prompt) {
     prompt: prompt,
   });
 
-  // console.log(image.data);
-  image_url = response.data[0].url;
-  return image_url;
+  imageUrl = response.data[0].url;
+  return imageUrl;
 }
 
-// promptAi("What is JavaScript?").then((res) => {
+// promptAi('What is JavaScript?').then((res) => {
 //   console.log(res.message);
 // });
 promptImage('Pigs in space').then((res) => {
