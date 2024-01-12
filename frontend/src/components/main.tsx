@@ -5,10 +5,12 @@ const Main = () => {
   const [input, setInput] = useState<string>("");
   const [output, setOutput] = useState<React.ReactNode>(null);
   const [image, setImage] = useState<string | null>(null);
-  const [endpoint, setEndpoint] = useState<string>("");
+  const [endpoint, setEndpoint] = useState<string>("gpt");
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setIsLoading(true);
     axios
       .post(`http://localhost:4000/${endpoint}`, { prompt: input })
       .then((res) => {
@@ -17,9 +19,11 @@ const Main = () => {
         } else {
           setOutput(JSON.stringify(res.data.message.content));
         }
+        setIsLoading(false);
       })
       .catch((err) => {
         console.log(err);
+        setIsLoading(false);
       });
   };
 
@@ -47,6 +51,7 @@ const Main = () => {
         >
           Submit
         </button>
+        {isLoading && <p>Loading...</p>}
         <div className="mt-4 flex justify-center">
           {endpoint === "dalle" && image ? (
             <img src={image} alt="Generated" />
