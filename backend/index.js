@@ -9,7 +9,7 @@ const app = express();
 app.use(bodyParser.json(), cors());
 
 app.use(function (req, res, next) {
-  res.header('Access-Control-Allow-Origin', '*'); //Allow for all origins
+  res.header('Access-Control-Allow-Origin', '*');
   res.header(
     'Access-Control-Allow-Headers',
     'Origin, X-Requested-With, Content-Type, Accept',
@@ -30,7 +30,7 @@ app.post('/gpt', async (req, res) => {
 app.post('/dalle', async (req, res) => {
   let prompt = req.body.prompt;
   let response = await promptImage(prompt);
-  res.send(response); // This line was missing
+  res.send(response);
 });
 
 dotenv.config();
@@ -47,14 +47,14 @@ let promptAi = async (prompt) => {
       {
         role: 'system',
         content:
-          'You are a helpful assistant.But you are drunk. Your ansers may be a bit off.',
+          'You are a helpful assistant.But you are stoner. Act like a real rasta stoner.',
       },
       {
         role: 'user',
         content: prompt,
       },
     ],
-    temperature: 0.2,
+    temperature: 0.3,
     frequency_penalty: 0.5,
     top_p: 1,
   });
@@ -71,10 +71,3 @@ async function promptImage(prompt) {
   imageUrl = response.data[0].url;
   return imageUrl;
 }
-
-// promptAi('What is JavaScript?').then((res) => {
-//   console.log(res.message);
-// });
-promptImage('Pigs in space').then((res) => {
-  console.log(res);
-});
