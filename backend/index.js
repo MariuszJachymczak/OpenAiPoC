@@ -30,7 +30,7 @@ app.post('/gpt', async (req, res) => {
 app.post('/dalle', async (req, res) => {
   let prompt = req.body.prompt;
   let response = await promptImage(prompt);
-  res.send(response); // This line was missing
+  res.send(response);
 });
 
 dotenv.config();
@@ -75,6 +75,6 @@ async function promptImage(prompt) {
 // promptAi('What is JavaScript?').then((res) => {
 //   console.log(res.message);
 // });
-promptImage('Pigs in space').then((res) => {
-  console.log(res);
-});
+// promptImage('Pigs in space').then((res) => {
+//   console.log(res);
+// });
