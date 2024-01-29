@@ -1,15 +1,18 @@
-const { OpenAI } = require('openai');
-const dotenv = require('dotenv');
-const express = require('express');
-const bodyParser = require('body-parser');
-
-const cors = require('cors');
+import 'web-streams-polyfill/dist/polyfill.es6.js';
+import { OpenAI } from 'openai';
+import dotenv from 'dotenv';
+import express from 'express';
+import bodyParser from 'body-parser';
+import cors from 'cors';
+import { loadAndSplitChunks, initializeVectorstoreWithDocuments } from './libs/helpers.js';
+import { RunnableSequence } from "@langchain/core/runnables";
+import { Document } from "@langchain/core/documents";
 
 const app = express();
 app.use(bodyParser.json(), cors());
 
 app.use(function (req, res, next) {
-  res.header('Access-Control-Allow-Origin', '*'); //Allow for all origins
+  res.header('Access-Control-Allow-Origin', '*');
   res.header(
     'Access-Control-Allow-Headers',
     'Origin, X-Requested-With, Content-Type, Accept',
@@ -17,9 +20,9 @@ app.use(function (req, res, next) {
   next();
 });
 
-app.listen(4000, () => {
-  console.log('Server is listening on port 4000');
-});
+// app.listen(4000, () => {
+//   console.log('Server is listening on port 4000');
+// });
 
 app.post('/gpt', async (req, res) => {
   let prompt = req.body.prompt;
@@ -68,9 +71,43 @@ async function promptImage(prompt) {
     prompt: prompt,
   });
 
-  imageUrl = response.data[0].url;
+  let imageUrl = response.data[0].url;
   return imageUrl;
 }
+
+const splitDocs = await loadAndSplitChunks({
+  chunkSize: 1536,
+  chunkOverlap: 128,
+});
+
+const vectorstore = await initializeVectorstoreWithDocuments({
+  documents: splitDocs,
+});
+
+const retriver = vectorstore.asRetriever();
+
+const convertDocsToString = (documents) => {
+  return documents.map((document) => {
+    return `<doc>\n${document.pageContent}\n</doc>`
+  }).join("\n");
+};
+/*
+{
+question: "What is deep learning?"
+}
+*/
+
+const documentRetrivalChain = RunnableSequence.from([
+  (input) => input.question,
+  retriver,
+  convertDocsToString
+])
+
+const results = await documentRetrivalChain.invoke({
+  question: "What are the prerequisites for this course?"
+});
+console.log(results)
+
 
 // promptAi('What is JavaScript?').then((res) => {
 //   console.log(res.message);
