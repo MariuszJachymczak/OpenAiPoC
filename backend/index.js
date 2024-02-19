@@ -4,11 +4,19 @@ import dotenv from 'dotenv';
 import express from 'express';
 import bodyParser from 'body-parser';
 import cors from 'cors';
-import { loadAndSplitChunks, initializeVectorstoreWithDocuments } from './libs/helpers.js';
-import { RunnableSequence } from "@langchain/core/runnables";
-import { Document } from "@langchain/core/documents";
+import GeneratePDFAnswerBasedOnPrompt from './embeddings.js';
+import GenerateAnswerBasedOnPrompt from './Answer.js';
 
 const app = express();
+
+dotenv.config();
+
+const configuration = {
+  apiKey: process.env.OPENAI_API_KEY,
+};
+
+const openai = new OpenAI(configuration);
+
 app.use(bodyParser.json(), cors());
 
 app.use(function (req, res, next) {
@@ -20,9 +28,9 @@ app.use(function (req, res, next) {
   next();
 });
 
-// app.listen(4000, () => {
-//   console.log('Server is listening on port 4000');
-// });
+app.listen(4000, () => {
+  console.log('Server is listening on port 4000');
+});
 
 app.post('/gpt', async (req, res) => {
   let prompt = req.body.prompt;
@@ -36,14 +44,19 @@ app.post('/dalle', async (req, res) => {
   res.send(response);
 });
 
-dotenv.config();
+app.post('/embeddings', async (req, res) => {
+  let prompt = req.body.prompt;
+  let response = await GeneratePDFAnswerBasedOnPrompt(prompt);
+  res.send(response);
+});
 
-const configuration = {
-  apiKey: process.env.OPENAI_API_KEY,
-};
-const openai = new OpenAI(configuration);
+app.post('/langchain', async (req, res) => {
+  let prompt = req.body.prompt;
+  let response = await GenerateAnswerBasedOnPrompt(prompt);
+  res.send(response);
+});
 
-let promptAi = async (prompt) => {
+async function promptAi(prompt) {
   const response = await openai.chat.completions.create({
     model: 'gpt-3.5-turbo',
     messages: [
@@ -59,11 +72,10 @@ let promptAi = async (prompt) => {
     ],
     temperature: 0.2,
     frequency_penalty: 0.5,
-    top_p: 1,
   });
 
   return response.choices[0];
-};
+}
 
 async function promptImage(prompt) {
   const response = await openai.images.generate({
@@ -74,44 +86,3 @@ async function promptImage(prompt) {
   let imageUrl = response.data[0].url;
   return imageUrl;
 }
-
-const splitDocs = await loadAndSplitChunks({
-  chunkSize: 1536,
-  chunkOverlap: 128,
-});
-
-const vectorstore = await initializeVectorstoreWithDocuments({
-  documents: splitDocs,
-});
-
-const retriver = vectorstore.asRetriever();
-
-const convertDocsToString = (documents) => {
-  return documents.map((document) => {
-    return `<doc>\n${document.pageContent}\n</doc>`
-  }).join("\n");
-};
-/*
-{
-question: "What is deep learning?"
-}
-*/
-
-const documentRetrivalChain = RunnableSequence.from([
-  (input) => input.question,
-  retriver,
-  convertDocsToString
-])
-
-const results = await documentRetrivalChain.invoke({
-  question: "What are the prerequisites for this course?"
-});
-console.log(results)
-
-
-// promptAi('What is JavaScript?').then((res) => {
-//   console.log(res.message);
-// });
-// promptImage('Pigs in space').then((res) => {
-//   console.log(res);
-// });
