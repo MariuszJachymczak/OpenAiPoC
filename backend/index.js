@@ -4,14 +4,9 @@ import dotenv from 'dotenv';
 import express from 'express';
 import bodyParser from 'body-parser';
 import cors from 'cors';
-<<<<<<< HEAD
-import GeneratePDFAnswerBasedOnPrompt from './Embeddings.js';
-import GenerateAnswerBasedOnPrompt from './Answer.js';
-import PromptScrapper from './Scraper.js';
-=======
 import GeneratePDFAnswerBasedOnPrompt from './embeddings.js';
 import GenerateAnswerBasedOnPrompt from './Answer.js';
->>>>>>> 55d8b937325a7c6b593d9f04b58345180a416ea3
+import PromptScrapper from './Scraper.js';
 
 const app = express();
 
