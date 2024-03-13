@@ -57,15 +57,12 @@ app.post('/langchain', async (req, res) => {
   res.send(response);
 });
 
-<<<<<<< HEAD
 app.post('/scrapper', async (req, res) => {
   let prompt = req.body.prompt;
   let response = await PromptScrapper(prompt);
   res.send(response);
 });
 
-=======
->>>>>>> 55d8b937325a7c6b593d9f04b58345180a416ea3
 async function promptAi(prompt) {
   const response = await openai.chat.completions.create({
     model: 'gpt-3.5-turbo',
@@ -80,11 +77,7 @@ async function promptAi(prompt) {
         content: prompt,
       },
     ],
-<<<<<<< HEAD
     temperature: 0.7,
-=======
-    temperature: 0.2,
->>>>>>> 55d8b937325a7c6b593d9f04b58345180a416ea3
     frequency_penalty: 0.5,
   });
 
