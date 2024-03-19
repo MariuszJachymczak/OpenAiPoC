@@ -1,11 +1,13 @@
 import { configureStore } from "@reduxjs/toolkit";
 import imageGeneratorSlice from "../redux/slices/imageGeneratorSlice";
 import loadingSlice from "./slices/loadingSlice";
+import answerGeneratorSlice from "./slices/answerGeneratorSlice";
 
 export const store = configureStore({
   reducer: {
     imageGenerator: imageGeneratorSlice,
     loading: loadingSlice,
+    answerGenerator: answerGeneratorSlice,
   },
 });
 

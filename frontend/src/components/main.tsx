@@ -13,6 +13,7 @@ import LeftSidebar from "./sidebar/LeftSidebar";
 import LandingPage from "./pages/landingpage/LandingPage";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import ImageGeneratorPage from "./pages/imageGeneratorPage/ImageGeneratorPage";
+import ConversationPage from "./pages/conversationPage/ConversationPage";
 
 const Main = () => {
   const [input, setInput] = useState<string>("");
@@ -37,10 +38,10 @@ const Main = () => {
     try {
       let data;
       switch (endpoint) {
-        case "gpt":
-          data = await fetchGPT(input);
-          setOutput(JSON.stringify(data.message.content));
-          break;
+        // case "gpt":
+        //   data = await fetchGPT(input);
+        //   setOutput(JSON.stringify(data.message.content));
+        //   break;
         // case "dalle":
         //   data = await fetchDALLE(input);
         //   setImage(data);
@@ -83,6 +84,7 @@ const Main = () => {
             <Routes>
               <Route path="/" element={<LandingPage />} />
               <Route path="/image" element={<ImageGeneratorPage />} />
+              <Route path="/conversation" element={<ConversationPage />} />
             </Routes>
 
             {/* <form className="mt-4" onSubmit={handleSubmit}>
