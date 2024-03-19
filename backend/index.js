@@ -1,4 +1,3 @@
-import 'web-streams-polyfill/dist/polyfill.es6.js';
 import { OpenAI } from 'openai';
 import dotenv from 'dotenv';
 import express from 'express';
