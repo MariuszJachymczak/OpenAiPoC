@@ -65,9 +65,9 @@ const LeftSidebar = () => {
               </Link>
             </li>
             <li className="rounded-sm hover:bg-orange01">
-              <a
+              <Link
                 rel="noopener noreferrer"
-                href="#"
+                to="conversation"
                 className="flex items-center p-2 space-x-3 rounded-md"
               >
                 <svg
@@ -79,8 +79,8 @@ const LeftSidebar = () => {
                   <path d={secondDocumentChatIconSVG}></path>
                   <path d={thirdDocumentChatIconSVG}></path>
                 </svg>
-                <span>Document Chat</span>
-              </a>
+                <span>Conversation with AI</span>
+              </Link>
             </li>
             <li className="rounded-sm hover:bg-orange01">
               <a
