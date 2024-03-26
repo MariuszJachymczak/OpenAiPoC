@@ -1,4 +1,3 @@
-import 'web-streams-polyfill/dist/polyfill.es6.js';
 import * as dotenv from 'dotenv';
 import { OpenAI } from '@langchain/openai';
 import { BufferMemory } from 'langchain/memory';

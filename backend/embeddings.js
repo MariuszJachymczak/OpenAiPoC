@@ -1,4 +1,3 @@
-import 'web-streams-polyfill/dist/polyfill.es6.js';
 import 'dotenv/config';
 import {
   loadAndSplitChunks,
@@ -53,7 +52,7 @@ export default async function GeneratePDFAnswerBasedOnPrompt(prompt) {
 expert at interpreting and answering questions based on provided sources.
 Using the below provided context and chat history,
 answer the user's question to the best of your ability
-using only the resources provided. Be verbose!
+using only the resources provided. Be verbose! Your answers will always be in Polish.
 
 <context>
 {context}
@@ -83,21 +82,21 @@ using only the resources provided. Be verbose!
   //   contentType: 'text/plain',
   // });
 
-  const messageHistories = {};
+  const messageHistory = new ChatMessageHistory();
 
-  const getMessageHistoryForSession = (sessionId) => {
-    if (messageHistories[sessionId] !== undefined) {
-      return messageHistories[sessionId];
-    }
-    const newChatSessionHistory = new ChatMessageHistory();
-    messageHistories[sessionId] = newChatSessionHistory;
-    return newChatSessionHistory;
-  };
+  // const getMessageHistoryForSession = (sessionId) => {
+  //   // if (messageHistories[sessionId] !== undefined) {
+  //   //   return messageHistories[sessionId];
+  //   // }
+  //   const newChatSessionHistory = new ChatMessageHistory();
+  //   messageHistories[sessionId] = newChatSessionHistory;
+  //   return newChatSessionHistory;
+  // };
   const finalRetrievalChain = new RunnableWithMessageHistory({
     runnable: conversationalRetrievalChain,
-    getMessageHistory: getMessageHistoryForSession,
-    inputMessagesKey: 'question',
+    getMessageHistory: (_sessionId) => messageHistory,
     historyMessagesKey: 'history',
+    inputMessagesKey: 'question',
   });
 
   const originalAnswer = await finalRetrievalChain.invoke(

@@ -11,7 +11,7 @@ import { RunnableSequence } from '@langchain/core/runnables';
 import { StringOutputParser } from '@langchain/core/output_parsers';
 
 export async function loadAndSplitChunks({ chunkSize, chunkOverlap }) {
-  const loader = new PDFLoader('./data/MachineLearning-Lecture01.pdf');
+  const loader = new PDFLoader('./data/kurs.pdf');
 
   const rawCS229Docs = await loader.load();
 
