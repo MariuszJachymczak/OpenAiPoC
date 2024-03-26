@@ -103,9 +103,9 @@ const LeftSidebar = () => {
               </a>
             </li>
             <li className="rounded-sm hover:bg-orange01">
-              <a
+              <Link
                 rel="noopener noreferrer"
-                href="#"
+                to="RAG"
                 className="flex justify-right p-2 space-x-3 rounded-md"
               >
                 <svg
@@ -116,8 +116,8 @@ const LeftSidebar = () => {
                   <path d="M440,424V88H352V13.005L88,58.522V424H16v32h86.9L352,490.358V120h56V456h88V424ZM320,453.642,120,426.056V85.478L320,51Z"></path>
                   <rect width="32" height="64" x="256" y="232"></rect>
                 </svg>
-                <span>Logout</span>
-              </a>
+                <span>RAG</span>
+              </Link>
             </li>
           </ul>
         </div>

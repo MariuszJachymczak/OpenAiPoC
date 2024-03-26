@@ -14,6 +14,7 @@ import LandingPage from "./pages/landingpage/LandingPage";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import ImageGeneratorPage from "./pages/imageGeneratorPage/ImageGeneratorPage";
 import ConversationPage from "./pages/conversationPage/ConversationPage";
+import RagPage from "./pages/RAGpage/RagPage";
 
 const Main = () => {
   const [input, setInput] = useState<string>("");
@@ -50,10 +51,10 @@ const Main = () => {
           data = await fetchEmbeddings(input);
           setOutput(JSON.stringify(data));
           break;
-        case "langchain":
-          data = await fetchLangchain(input);
-          setOutput(data);
-          break;
+        // case "langchain":
+        //   data = await fetchLangchain(input);
+        //   setOutput(data);
+        //   break;
         case "scrapper":
           data = await fetchScrapper(input);
           setOutput(data);
@@ -85,6 +86,7 @@ const Main = () => {
               <Route path="/" element={<LandingPage />} />
               <Route path="/image" element={<ImageGeneratorPage />} />
               <Route path="/conversation" element={<ConversationPage />} />
+              <Route path="/rag" element={<RagPage />} />
             </Routes>
 
             {/* <form className="mt-4" onSubmit={handleSubmit}>
